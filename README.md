@@ -47,9 +47,11 @@ Usage
 You probably want to create a single QtAwesome object for your whole application:
 
 ````
-    QtAwesome* awesome = new QtAwesome( qApp )
+    QtAwesome* awesome = new QtAwesome(qApp)
     awesome->initFontAwesome();     // This line is important as it loads the font and initializes the named icon map
 
+    // or specify your own Font Awesome source
+    awesome->initFontAwesome("my-copy-of-fontawesome-4.7");
 ````
 
 * Add an accessor to this object (i.e. a global function, member of your application object, or whatever you like).
@@ -61,30 +63,33 @@ Example
 
 ```c++
 // You should create a single object of QtAwesome.
-QtAwesome* awesome = new QtAwesome( qApp );
+QtAwesome* awesome = new QtAwesome(qApp);
+
+// This call would default to resource ":/fonts/fontawesome-4.7.0.ttf"
 awesome->initFontAwesome();
+// or specify your own Font Awesome source
+awesome->initFontAwesome("my-copy-of-fontawesome-4.7");
 
 // Next create your icon with the help of the icon-enumeration (no dashes):
-QPushButton* beerButton new QPushButton( awesome->icon( fa::beer ), "Cheers!" );
+QPushButton* beerButton = new QPushButton(awesome->icon(fa::beer), "Cheers!");
 
-// You can also use 'string' names to access the icons. (The string version omits the 'fa-' or 'icon-' prefix and has no dashes )
-QPushButton* coffeeButton new QPushButton( awesome->icon( "coffee" ), "Black please!" );
+// You can also use 'string' names to access the icons. (The string version omits the 'fa-' or 'icon-' prefix and has no dashes)
+QPushButton* coffeeButton = new QPushButton(awesome->icon("coffee"), "Black please!");
 
 // When you create an icon you can supply some options for your icons:
 // The available options can be found at the "Default options"-section
 
 QVariantMap options;
-options.insert( "color" , QColor(255,0,0) );
-QPushButton* musicButton = new QPushButton( awesome->icon( fa::music, options ), "Music" );
+options.insert("color" , QColor(255,0,0));
+QPushButton* musicButton = new QPushButton(awesome->icon(fa::music, options), "Music");
 
 // You can also change the default options.
 // for example if you always would like to have green icons you could call)
-awesome->setDefaultOption( "color-disabled", QColor(0,255,0) );
+awesome->setDefaultOption("color-disabled", QColor(0,255,0));
 
 // You can also directly render a label with this font
-QLabel* label = new QLabel( QChar( fa::group ) );
-label->setFont( awesome->font(16) );
-
+QLabel* label = new QLabel(QChar(fa::group));
+label->setFont(awesome->font(16));
 ```
 
 Example custom painter
@@ -96,24 +101,24 @@ This example registers a custom painter for supporting a duplicate icon (it draw
 class DuplicateIconPainter : public QtAwesomeIconPainter
 {
 public:
-    virtual void paint( QtAwesome* awesome, QPainter* painter, const QRect& rectIn, QIcon::Mode mode, QIcon::State state, const QVariantMap& options  )
+    virtual void paint(QtAwesome* awesome, QPainter* painter, const QRect& rectIn, QIcon::Mode mode, QIcon::State state, const QVariantMap& options)
     {
         int drawSize = qRound(rectIn.height()*0.5);
         int offset = rectIn.height() / 4;
-        QChar chr = QChar( static_cast<int>(fa::plus) );
+        QChar chr = QChar(static_cast<int>(fa::plus));
 
-        painter->setFont( awesome->font( drawSize ) );
+        painter->setFont(awesome->font(drawSize));
 
-        painter->setPen( QColor(100,100,100) );
-        painter->drawText( QRect( QPoint(offset*2, offset*2), QSize(drawSize, drawSize) ), chr , QTextOption( Qt::AlignCenter|Qt::AlignVCenter ) );
+        painter->setPen(QColor(100,100,100));
+        painter->drawText(QRect(QPoint(offset*2, offset*2), QSize(drawSize, drawSize)), chr , QTextOption(Qt::AlignCenter|Qt::AlignVCenter));
 
-        painter->setPen( QColor(50,50,50) );
-        painter->drawText( QRect( QPoint(rectIn.width()-drawSize-offset, rectIn.height()-drawSize-offset), QSize(drawSize, drawSize) ), chr , QTextOption( Qt::AlignCenter|Qt::AlignVCenter ) );
+        painter->setPen(QColor(50,50,50));
+        painter->drawText(QRect(QPoint(rectIn.width()-drawSize-offset, rectIn.height()-drawSize-offset), QSize(drawSize, drawSize)), chr , QTextOption(Qt::AlignCenter|Qt::AlignVCenter));
 
     }
 };
 
-awesome->give("duplicate", new DuplicateIconPainter() );
+awesome->give("duplicate", new DuplicateIconPainter());
 ```
 
 
@@ -123,17 +128,17 @@ Default options:
   The following options are default in the QtAwesome class.
 
 ```c++
-setDefaultOption( "color", QColor(50,50,50) );
-setDefaultOption( "color-disabled", QColor(70,70,70,60));
-setDefaultOption( "color-active", QColor(10,10,10));
-setDefaultOption( "color-selected", QColor(10,10,10));
+setDefaultOption("color", QColor(50,50,50));
+setDefaultOption("color-disabled", QColor(70,70,70,60));
+setDefaultOption("color-active", QColor(10,10,10));
+setDefaultOption("color-selected", QColor(10,10,10));
 
-setDefaultOption( "text", QString() );      // internal option
-setDefaultOption( "text-disabled", QString() );
-setDefaultOption( "text-active", QString() );
-setDefaultOption( "text-selected", QString() );
+setDefaultOption("text", QString());      // internal option
+setDefaultOption("text-disabled", QString());
+setDefaultOption("text-active", QString());
+setDefaultOption("text-selected", QString());
 
-setDefaultOption( "scale-factor", 0.9 );
+setDefaultOption("scale-factor", 0.9);
 ```
 
   When creating an icon, it first populates the options-map with the default options from the QtAwesome object.
@@ -143,7 +148,7 @@ setDefaultOption( "scale-factor", 0.9 );
   you could supply the following option:
 
 ```c++
-  options.insert("text-selected", QString( fa::lock ) );
+  options.insert("text-selected", QString(fa::lock));
 ```
 
 Color and text options have the following structure:
@@ -200,7 +205,7 @@ A workaround for this problem is converting it to a Pixmap icon like this:
 
 ```c++
 QAction* menuAction = new QAction("test");
-menuAction->setIcon( awesome->icon(fa::beer).pixmap(32,32) );
+menuAction->setIcon(awesome->icon(fa::beer).pixmap(32,32));
 ```
 
 
